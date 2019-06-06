@@ -120,7 +120,7 @@ bind = ({parent, self, data, join, attr, style, property, text, html, on:argsOn,
 
         # d3 stuff
         s = _parent.selectAll(self).data(_data, _join)
-        e = s.enter().append(nodeType)
+        e = s.enter().append(nodeType).merge(s)
 
         e[a.fn](a.a1, a.a2) for a in enter
 
@@ -168,7 +168,8 @@ bindSingle = ({parent, self, data, datum, attr, style, property, text, html, on:
 
     staticClass = staticClass.join(' ')
 
-    self = dvl.valueOf(parent).append(nodeType)
+    parent = dvl.valueOf(parent)
+    self = parent.append(nodeType).merge(parent)
     self.attr('id', staticId) is staticId
     self.attr('class', staticClass) is staticClass
   else

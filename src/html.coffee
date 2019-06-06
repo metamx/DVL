@@ -169,6 +169,7 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
           classStr += ' ' + icon.classStr if icon.classStr
 
           el.append('div')
+            .merge(el)
             .attr('class', classStr)
             .attr('title', icon.title)
             .on('click', (val, i) ->
@@ -181,13 +182,14 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
               d3.event.stopPropagation() if icon.onLeave?(val, i) is false
               return
             ).append('div')
+              .merge(el)
               .attr('class', 'icon')
 
           return
         return
 
       sel = ul.selectAll('li').data(_data)
-      a = sel.enter().append('li').append('a')
+      a = sel.enter().append('li').merge(sel).append('a').merge(sel)
 
       addIcons a, 'left'
       a.append('span')
@@ -416,6 +418,7 @@ htmlModule.combobox = ({parent, classStr, data, label, selectionLabel, link, cla
     return
 
   menuCont = divCont.append('div')
+    .merge(divCont)
     .attr('class', 'menu-cont')
     .style('position', 'absolute')
     .style('z-index', 1000)
@@ -676,6 +679,7 @@ htmlModule.dropdown = ({parent, classStr, data, label, selectionLabel, link, cla
     return
 
   menuCont = divCont.append('div')
+    .merge(divCont)
     .attr('class', 'menu-cont')
     .style('position', 'absolute')
     .style('z-index', 1000)
@@ -1093,8 +1097,9 @@ do ->
     throw new Error('there needs to be a parent') unless parent
     onClick = dvl.wrap(onClick)
 
-    thead = dvl.valueOf(parent).append('thead')
-    headerRow = thead.append('tr')
+    parent = dvl.valueOf(parent)
+    thead = parent.append('thead').merge(parent)
+    headerRow = thead.append('tr').merge(thead)
 
     listen = [onClick]
     newColumns = []
@@ -1115,11 +1120,14 @@ do ->
     # Init step
     sel = headerRow.selectAll('th').data(columns)
     enterTh = sel.enter().append('th')
+      .merge(sel)
     enterLiner = enterTh.append('div')
+      .merge(enterTh)
       .attr('class', 'liner')
 
     enterLiner.append('span')
     enterLiner.append('div')
+      .merge(enterLiner)
       .attr('class', 'indicator')
       .style('display', 'none')
 
@@ -1194,7 +1202,8 @@ do ->
   htmlModule.table.body = ({parent, data, compare, rowClass, classStr, rowLimit, columns, on:onRow}) ->
     throw new Error('there needs to be a parent') unless parent
     throw new Error('there needs to be data') unless data
-    tbody = dvl.valueOf(parent).append('tbody').attr('class', classStr)
+    parent = dvl.valueOf(parent)
+    tbody = parent.append('tbody').merge(parent).attr('class', classStr)
 
     compare = dvl.wrap(compare)
     rowClass = dvl.wrap(rowClass) if rowClass?
