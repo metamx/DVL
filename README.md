@@ -4,6 +4,14 @@
 
 DVL is built on top of [D3](http://mbostock.github.com/d3/) to allow for dynamic data binding to the DOM.
 
+## Developer installation
+
+Compiling DVL requires [compass](http://compass-style.org).
+* Update [Ruby](http://www.ruby-lang.org/en/downloads/)
+* Then [install compass](http://compass-style.org/install/):
+    * `gem update --system`
+    * `gem install compass`
+
 ## Usage
 
 The code DVL functionality can be described with the following functions:

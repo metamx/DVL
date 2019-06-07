@@ -1,5 +1,5 @@
 #!/bin/bash
 compass compile --sass-dir src/style/ --css-dir ./
-$(npm bin)/coffee --compile --bare --output build src
-$(npm bin)/browserify build/index.js -o dvl.js
-$(npm bin)/uglifyjs dvl.js > dvl.min.js
+$(npm bin)/coffee --compile --transpile --bare --output build src
+$(npm bin)/browserify build/index.js -o dist/dvl.js
+$(npm bin)/uglifyjs dist/dvl.js > dist/dvl.min.js

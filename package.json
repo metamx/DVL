@@ -18,22 +18,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/vogievetsky/dvl.git"
+    "url": "http://github.com/metamx/dvl.git"
   },
-  "main": "./dvl.js",
+  "main": "build/index.js",
   "devDependencies": {
-    "browserify": "~12.0.1",
-    "coffee-script": "1.6.3",
-    "compass": "^0.1.1",
-    "d3": "3.5.8",
-    "jsdom": "~7.0.2",
-    "uglify-js": "~2.6.0",
-    "chai": "~3.4.1",
-    "mocha": "~2.3.3"
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "browserify": "16.2.3",
+    "chai": "4.2.0",
+    "coffeescript": "2.4.1",
+    "compass": "0.1.1",
+    "d3": "5.9.2",
+    "jsdom": "15.1.1",
+    "mocha": "6.1.4",
+    "uglify-js": "3.6.0"
   },
   "scripts": {
     "test": "./test-run",
-    "prepublish": "./test-run",
+    "prepack": "./test-run",
     "compile": "./compile"
   }
 }
