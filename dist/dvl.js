@@ -2908,7 +2908,7 @@ htmlModule.list = function (_ref3) {
       extras = _ref3.extras,
       classStr = _ref3.classStr,
       highlight = _ref3.highlight;
-  var i, j, len, myOnEnter, myOnLeave, onClick, ul;
+  var i, j, len, myOnEnter, myOnLeave, onClick, p, ul;
 
   if (!parent) {
     throw new Error('must have parent');
@@ -2960,7 +2960,8 @@ htmlModule.list = function (_ref3) {
     });
   }
 
-  ul = dvl.valueOf(parent).append('ul').attr('class', classStr);
+  p = dvl.valueOf(parent);
+  ul = p.append('ul').merge(p).attr('class', classStr);
   onClick = dvl.group(function (val, i) {
     var _selections, base, linkVal;
 
@@ -4423,7 +4424,7 @@ dvl.compare = function (acc, reverse) {
       listen: listen,
       change: change,
       fn: function fn() {
-        var _compare, _rowClass, _rowLimit, colSel, dataSorted, enterRowSel, i, l, len1, ref2, rowSel, sel, visibleChanged, w;
+        var _compare, _rowClass, _rowLimit, colSel, dataSorted, i, l, len1, ref2, rowSel, sel, visibleChanged, w;
 
         dataSorted = (data.value() || []).valueOf();
         _compare = compare.value();
@@ -4439,7 +4440,7 @@ dvl.compare = function (acc, reverse) {
         }
 
         rowSel = tbody.selectAll('tr').data(dataSorted);
-        enterRowSel = rowSel.enter().append('tr');
+        rowSel.enter().append('tr');
         rowSel.exit().remove();
 
         if (rowClass) {
@@ -4609,13 +4610,13 @@ dvl.compare = function (acc, reverse) {
           fn: function fn(x, y, padding) {
             return function (d) {
               var sx, sy;
-              sx = d3.scale.linear().domain(d3.extent(d, function (d) {
+              sx = d3.scaleLinear().domain(d3.extent(d, function (d) {
                 return d[x];
               })).range([padding, width - padding]);
-              sy = d3.scale.linear().domain(d3.extent(d, function (d) {
+              sy = d3.scaleLinear().domain(d3.extent(d, function (d) {
                 return d[y];
               })).range([height - padding, padding]);
-              return d3.svg.line().x(function (dp) {
+              return d3.line().x(function (dp) {
                 return sx(dp[x]);
               }).y(function (dp) {
                 return sy(dp[y]);
@@ -4841,12 +4842,13 @@ svgModule.clipPath = function (_ref) {
       y = _ref.y,
       width = _ref.width,
       height = _ref.height;
-  var cp, myId;
+  var cp, myId, p;
   x = dvl.wrap(x || 0);
   y = dvl.wrap(y || 0);
   clipId++;
   myId = "cp".concat(clipId);
-  cp = dvl.valueOf(parent).append('defs').append('clipPath').attr('id', myId);
+  p = dvl.valueOf(parent);
+  cp = p.append('defs').merge(p).append('clipPath').merge(p).attr('id', myId);
   bind({
     parent: cp,
     self: 'rect',

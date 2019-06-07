@@ -11,10 +11,12 @@ svgModule.clipPath = ({parent, x, y, width, height}) ->
 
   clipId++
   myId = "cp#{clipId}"
-  cp = dvl.valueOf(parent)
-    .append('defs')
-      .append('clipPath')
-      .attr('id', myId)
+  p = dvl.valueOf(parent)
+  cp = p.append('defs')
+    .merge(p)
+    .append('clipPath')
+    .merge(p)
+    .attr('id', myId)
 
   bind {
     parent: cp

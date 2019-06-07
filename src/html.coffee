@@ -119,7 +119,9 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
         return if classParts.length then classParts.join(' ') else null
     )
 
-  ul = dvl.valueOf(parent).append('ul')
+  p = dvl.valueOf(parent)
+  ul = p.append('ul')
+    .merge(p)
     .attr('class', classStr)
 
   onClick = dvl.group (val, i) ->
@@ -1257,7 +1259,7 @@ do ->
         dataSorted = dataSorted.slice(0, _rowLimit) if _rowLimit?
 
         rowSel = tbody.selectAll('tr').data(dataSorted)
-        enterRowSel = rowSel.enter().append('tr')
+        rowSel.enter().append('tr')
         rowSel.exit().remove()
         if rowClass
           _rowClass = rowClass.value()
@@ -1380,9 +1382,9 @@ do ->
         lineFn = dvl.apply {
           args: [x, y, padding]
           fn: (x, y, padding) -> (d) ->
-            sx = d3.scale.linear().domain(d3.extent(d, (d) -> d[x])).range([padding,  width - padding])
-            sy = d3.scale.linear().domain(d3.extent(d, (d) -> d[y])).range([height - padding, padding])
-            return d3.svg.line().x((dp) -> sx(dp[x])).y((dp) -> sy(dp[y]))(d)
+            sx = d3.scaleLinear().domain(d3.extent(d, (d) -> d[x])).range([padding,  width - padding])
+            sy = d3.scaleLinear().domain(d3.extent(d, (d) -> d[y])).range([height - padding, padding])
+            return d3.line().x((dp) -> sx(dp[x])).y((dp) -> sy(dp[y]))(d)
         }
 
         dataFn = dvl.apply {
