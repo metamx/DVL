@@ -119,9 +119,7 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
         return if classParts.length then classParts.join(' ') else null
     )
 
-  p = dvl.valueOf(parent)
-  ul = p.append('ul')
-    .merge(p)
+  ul = dvl.valueOf(parent).append('ul')
     .attr('class', classStr)
 
   onClick = dvl.group (val, i) ->
@@ -171,7 +169,6 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
           classStr += ' ' + icon.classStr if icon.classStr
 
           el.append('div')
-            .merge(el)
             .attr('class', classStr)
             .attr('title', icon.title)
             .on('click', (val, i) ->
@@ -184,14 +181,15 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
               d3.event.stopPropagation() if icon.onLeave?(val, i) is false
               return
             ).append('div')
-              .merge(el)
               .attr('class', 'icon')
 
           return
         return
 
       sel = ul.selectAll('li').data(_data)
-      a = sel.enter().append('li').merge(sel).append('a').merge(sel)
+      li = sel.enter().append('li')
+      a = li.append('a')
+      sel = li.merge(sel)
 
       addIcons a, 'left'
       a.append('span')
@@ -204,7 +202,6 @@ htmlModule.list = ({parent, data, label, link, class:listClass, selection, selec
         .on('mouseout', myOnLeave)
         .select('a')
           .attr('href', _link)
-
 
       cont.select('span').text(_label)
 
@@ -420,7 +417,6 @@ htmlModule.combobox = ({parent, classStr, data, label, selectionLabel, link, cla
     return
 
   menuCont = divCont.append('div')
-    .merge(divCont)
     .attr('class', 'menu-cont')
     .style('position', 'absolute')
     .style('z-index', 1000)
@@ -681,7 +677,6 @@ htmlModule.dropdown = ({parent, classStr, data, label, selectionLabel, link, cla
     return
 
   menuCont = divCont.append('div')
-    .merge(divCont)
     .attr('class', 'menu-cont')
     .style('position', 'absolute')
     .style('z-index', 1000)
@@ -1099,9 +1094,8 @@ do ->
     throw new Error('there needs to be a parent') unless parent
     onClick = dvl.wrap(onClick)
 
-    parent = dvl.valueOf(parent)
-    thead = parent.append('thead').merge(parent)
-    headerRow = thead.append('tr').merge(thead)
+    thead = dvl.valueOf(parent).append('thead')
+    headerRow = thead.append('tr')
 
     listen = [onClick]
     newColumns = []
@@ -1122,14 +1116,12 @@ do ->
     # Init step
     sel = headerRow.selectAll('th').data(columns)
     enterTh = sel.enter().append('th')
-      .merge(sel)
     enterLiner = enterTh.append('div')
-      .merge(enterTh)
       .attr('class', 'liner')
+    sel = enterTh.merge(sel)
 
     enterLiner.append('span')
     enterLiner.append('div')
-      .merge(enterLiner)
       .attr('class', 'indicator')
       .style('display', 'none')
 
@@ -1204,8 +1196,7 @@ do ->
   htmlModule.table.body = ({parent, data, compare, rowClass, classStr, rowLimit, columns, on:onRow}) ->
     throw new Error('there needs to be a parent') unless parent
     throw new Error('there needs to be data') unless data
-    parent = dvl.valueOf(parent)
-    tbody = parent.append('tbody').merge(parent).attr('class', classStr)
+    tbody = dvl.valueOf(parent).append('tbody').attr('class', classStr)
 
     compare = dvl.wrap(compare)
     rowClass = dvl.wrap(rowClass) if rowClass?
@@ -1259,8 +1250,9 @@ do ->
         dataSorted = dataSorted.slice(0, _rowLimit) if _rowLimit?
 
         rowSel = tbody.selectAll('tr').data(dataSorted)
-        rowSel.enter().append('tr')
+        enterRowSel = rowSel.enter().append('tr')
         rowSel.exit().remove()
+        rowSel = enterRowSel.merge(rowSel)
         if rowClass
           _rowClass = rowClass.value()
           rowSel.attr('class', _rowClass)
@@ -1269,8 +1261,9 @@ do ->
           rowSel.on(k, v.value())
 
         colSel = rowSel.selectAll('td').data(columns)
-        colSel.enter().append('td')
+        colSelEnter = colSel.enter().append('td')
         colSel.exit().remove()
+        colSel = colSelEnter.merge(colSel)
 
         for c,i in columns
           sel = tbody.selectAll("td:nth-child(#{i+1})").data(dataSorted)

@@ -684,7 +684,8 @@ bind = function bind(_ref) {
 
 
         s = _parent.selectAll(self).data(_data, _join);
-        e = s.enter().append(nodeType).merge(s);
+        e = s.enter().append(nodeType);
+        s = e.merge(s);
 
         for (j = 0, len1 = enter.length; j < len1; j++) {
           a = enter[j];
@@ -776,8 +777,7 @@ bindSingle = function bindSingle(_ref2) {
     }
 
     staticClass = staticClass.join(' ');
-    parent = dvl.valueOf(parent);
-    self = parent.append(nodeType).merge(parent);
+    self = dvl.valueOf(parent).append(nodeType);
     self.attr('id', staticId) === staticId;
     self.attr('class', staticClass) === staticClass;
   } else {
@@ -2908,7 +2908,7 @@ htmlModule.list = function (_ref3) {
       extras = _ref3.extras,
       classStr = _ref3.classStr,
       highlight = _ref3.highlight;
-  var i, j, len, myOnEnter, myOnLeave, onClick, p, ul;
+  var i, j, len, myOnEnter, myOnLeave, onClick, ul;
 
   if (!parent) {
     throw new Error('must have parent');
@@ -2960,8 +2960,7 @@ htmlModule.list = function (_ref3) {
     });
   }
 
-  p = dvl.valueOf(parent);
-  ul = p.append('ul').merge(p).attr('class', classStr);
+  ul = dvl.valueOf(parent).append('ul').attr('class', classStr);
   onClick = dvl.group(function (val, i) {
     var _selections, base, linkVal;
 
@@ -3009,7 +3008,7 @@ htmlModule.list = function (_ref3) {
     name: 'update_html_list',
     listen: [data, label, link],
     fn: function fn() {
-      var _class, _data, _label, _link, a, addIcons, cont, sel;
+      var _class, _data, _label, _link, a, addIcons, cont, li, sel;
 
       _data = data.value();
       _label = label.value();
@@ -3034,7 +3033,7 @@ htmlModule.list = function (_ref3) {
             classStr += ' ' + icon.classStr;
           }
 
-          el.append('div').merge(el).attr('class', classStr).attr('title', icon.title).on('click', function (val, i) {
+          el.append('div').attr('class', classStr).attr('title', icon.title).on('click', function (val, i) {
             if ((typeof icon.onSelect === "function" ? icon.onSelect(val, i) : void 0) === false) {
               d3.event.stopPropagation();
             }
@@ -3046,12 +3045,14 @@ htmlModule.list = function (_ref3) {
             if ((typeof icon.onLeave === "function" ? icon.onLeave(val, i) : void 0) === false) {
               d3.event.stopPropagation();
             }
-          }).append('div').merge(el).attr('class', 'icon');
+          }).append('div').attr('class', 'icon');
         });
       };
 
       sel = ul.selectAll('li').data(_data);
-      a = sel.enter().append('li').merge(sel).append('a').merge(sel);
+      li = sel.enter().append('li');
+      a = li.append('a');
+      sel = li.merge(sel);
       addIcons(a, 'left');
       a.append('span');
       addIcons(a, 'right');
@@ -3386,7 +3387,7 @@ htmlModule.combobox = function (_ref4) {
       return typeof icon_onSelect === "function" ? icon_onSelect(val, i) : void 0;
     };
   });
-  menuCont = divCont.append('div').merge(divCont).attr('class', 'menu-cont').style('position', 'absolute').style('z-index', 1000);
+  menuCont = divCont.append('div').attr('class', 'menu-cont').style('position', 'absolute').style('z-index', 1000);
   dvl.register({
     listen: [menuOpen, menuAnchor],
     fn: function fn() {
@@ -3750,7 +3751,7 @@ htmlModule.dropdown = function (_ref5) {
       return typeof icon_onSelect === "function" ? icon_onSelect(val, i) : void 0;
     };
   });
-  menuCont = divCont.append('div').merge(divCont).attr('class', 'menu-cont').style('position', 'absolute').style('z-index', 1000);
+  menuCont = divCont.append('div').attr('class', 'menu-cont').style('position', 'absolute').style('z-index', 1000);
   dvl.register({
     listen: [menuOpen, menuAnchor],
     fn: function fn() {
@@ -4240,9 +4241,8 @@ dvl.compare = function (acc, reverse) {
     }
 
     onClick = dvl.wrap(onClick);
-    parent = dvl.valueOf(parent);
-    thead = parent.append('thead').merge(parent);
-    headerRow = thead.append('tr').merge(thead);
+    thead = dvl.valueOf(parent).append('thead');
+    headerRow = thead.append('tr');
     listen = [onClick];
     newColumns = [];
 
@@ -4263,10 +4263,11 @@ dvl.compare = function (acc, reverse) {
     columns = newColumns; // Init step
 
     sel = headerRow.selectAll('th').data(columns);
-    enterTh = sel.enter().append('th').merge(sel);
-    enterLiner = enterTh.append('div').merge(enterTh).attr('class', 'liner');
+    enterTh = sel.enter().append('th');
+    enterLiner = enterTh.append('div').attr('class', 'liner');
+    sel = enterTh.merge(sel);
     enterLiner.append('span');
-    enterLiner.append('div').merge(enterLiner).attr('class', 'indicator').style('display', 'none');
+    enterLiner.append('div').attr('class', 'indicator').style('display', 'none');
     sel.exit().remove();
     dvl.register({
       name: 'header_render',
@@ -4369,8 +4370,7 @@ dvl.compare = function (acc, reverse) {
       throw new Error('there needs to be data');
     }
 
-    parent = dvl.valueOf(parent);
-    tbody = parent.append('tbody').merge(parent).attr('class', classStr);
+    tbody = dvl.valueOf(parent).append('tbody').attr('class', classStr);
     compare = dvl.wrap(compare);
 
     if (rowClass != null) {
@@ -4424,7 +4424,7 @@ dvl.compare = function (acc, reverse) {
       listen: listen,
       change: change,
       fn: function fn() {
-        var _compare, _rowClass, _rowLimit, colSel, dataSorted, i, l, len1, ref2, rowSel, sel, visibleChanged, w;
+        var _compare, _rowClass, _rowLimit, colSel, colSelEnter, dataSorted, enterRowSel, i, l, len1, ref2, rowSel, sel, visibleChanged, w;
 
         dataSorted = (data.value() || []).valueOf();
         _compare = compare.value();
@@ -4440,8 +4440,9 @@ dvl.compare = function (acc, reverse) {
         }
 
         rowSel = tbody.selectAll('tr').data(dataSorted);
-        rowSel.enter().append('tr');
+        enterRowSel = rowSel.enter().append('tr');
         rowSel.exit().remove();
+        rowSel = enterRowSel.merge(rowSel);
 
         if (rowClass) {
           _rowClass = rowClass.value();
@@ -4454,8 +4455,9 @@ dvl.compare = function (acc, reverse) {
         }
 
         colSel = rowSel.selectAll('td').data(columns);
-        colSel.enter().append('td');
+        colSelEnter = colSel.enter().append('td');
         colSel.exit().remove();
+        colSel = colSelEnter.merge(colSel);
 
         for (i = l = 0, len1 = columns.length; l < len1; i = ++l) {
           c = columns[i];
